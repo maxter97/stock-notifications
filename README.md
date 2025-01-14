@@ -19,10 +19,18 @@ Selcet Standard for type and name(ex.stock_topic) your topic. Then hit create To
 ### 3. Create SNS Policy and Role for Lambda 
 ### 4. Create Lambda function
 ### 5. Create subscription for SNS topic and subscribe to it
-### 6. Add and deploy Code and Environment Varialbes 
-### 7. Test Code 
-### (Optional) Configure EventBridge 
+### 6. Add Code and Environment Varialbes to Lambda fuction 
+### 7. Test and Deploy Code 
+### (Optional) Configure EventBridge Schedule to receive Notifcations at a certain period of time
 
 ## What was learned 
+Create an SNS topic for users to subscribe too
+Setting up SNS to send messaseges 
+Create a Lambda function
+Using code and environment varialbes inside an Lambda fuction 
+Adding policys and roles to Lambda 
+Retirving data from an api and changing it to a readable format
+Tesing before delpoying your code 
 ## Future Improvements
-
+Have a link users and click to subsribe 
+Have a way to enter what stocks they want to see outside of changing the code inside the fuction 
