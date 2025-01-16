@@ -16,11 +16,27 @@ Sign up at https://www.alphavantage.co/support/#api-key for a free tier key.
 Make sure to save the key for later in the project
 ### 2. Create a AWS SNS Topic
 Selcet Standard for type and name(ex.stock_topic) your topic. Then hit create Topic. Save the ARN for the topic to use for later
-### 3. Create SNS Policy and Role for Lambda 
-### 4. Create Lambda function
-### 5. Create subscription for SNS topic and subscribe to it
-### 6. Add Code and Environment Varialbes to Lambda fuction 
-### 7. Test and Deploy Code 
+### 3. Create SNS Policy and role for Lambda 
+In the poicy editor select JSON and input this code.
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "sns:Publish",
+            "Resource": "arn:aws:sns:REGION:ACCOUNT_ID:stock_topic"
+        }
+    ]
+}
+```
+* Replace "arn:aws:sns:REGION:ACCOUNT_ID:stock_topic" with ARN from the SNS topic.
+
+### 4. Use newly created policy to create a role 
+### 5. Create Lambda function
+### 6. Create subscription for SNS topic and subscribe to it
+### 7. Add Code and Environment Varialbes to Lambda fuction 
+### 8. Test and Deploy Code 
 ### (Optional) Configure EventBridge Schedule to receive Notifcations at a certain period of time
 
 ## What was learned 
