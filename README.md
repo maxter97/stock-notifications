@@ -50,12 +50,12 @@ Here is the policy:
 ![image](https://github.com/user-attachments/assets/22be914a-e454-4988-be37-f6ed62b03aec)
 
 ### 5. Create Lambda function
-Create the function. Attach the newly created role. 
+Create a new Lambda function. Choose python 3.xx as the runtime and x86_64 as the architecture. Attach the newly created role to it.
 ![Screenshot 2025-01-12 164536](https://github.com/user-attachments/assets/bf1db415-47ca-4ce1-84bd-dd1403129bce)
 
 
 ### 6. Create subscription for SNS topic and subscribe to it
-You can subsribe using email and/or SMS
+You can subscribe using email and/or SMS
 ![Screenshot 2025-01-12 163149](https://github.com/user-attachments/assets/fa33d1e1-fef5-423d-bc2f-f363de3c9ca6)
 ![Screenshot 2025-01-12 163157](https://github.com/user-attachments/assets/74ac425b-243e-4e27-8f8c-e8118dd726d9)
 Then you will recieve a message and have to confirm 
@@ -63,7 +63,7 @@ Then you will recieve a message and have to confirm
 ![Screenshot 2025-01-12 163426](https://github.com/user-attachments/assets/d346edba-28f4-457e-92d5-ada91ad02d9e)
 
 
-### 7. Add Code and Environment Varialbes to Lambda fuction 
+### 7. Add code and Environment Variables to Lambda function
 Insert code from stock_notifications.py and put it inside the lambda function.
 
 Here is the code:
@@ -131,8 +131,27 @@ def lambda_handler(event, context):
     
     return {"statusCode": 200, "body": "Data processed and sent to SNS"}
 ```
+(If you want to test using different stocks make changes to this line of code with the symbol of the stocks you want to see)
+![image](https://github.com/user-attachments/assets/10cb0fee-26dd-4f0a-8a4a-c8d42cb06e55)
+
+Add Environment Variables so it can be used by the code.
+![image](https://github.com/user-attachments/assets/e6898fd9-0b61-433f-890f-cf340e2a12e5)
+
 ### 8. Test and Deploy Code 
+Deploy the code. After test the code . (If any error occur try changing the timeout for the function from 3s to 6s or more.)
+![image](https://github.com/user-attachments/assets/3e0be380-a667-47f0-9929-d6dd01da63cd)
+
+Here is what a succesful test looks like:
+
+
+![image](https://github.com/user-attachments/assets/b5b219df-11a3-485c-9273-eb1d93543e28)
+
+
+
+
 ### (Optional) Configure EventBridge Schedule to receive Notifcations at a certain period of time
+![Screenshot 2025-01-12 171738](https://github.com/user-attachments/assets/bdbbd72b-6d4c-432c-be2e-3361abd187c0)
+
 
 ## What was learned 
 - Create an SNS topic for users to subscribe too
