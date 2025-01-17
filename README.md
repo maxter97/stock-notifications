@@ -33,20 +33,115 @@ In the poicy editor select JSON and input this code.
 * Replace "arn:aws:sns:REGION:ACCOUNT_ID:stock_topic" with ARN from the SNS topic.
 
 ### 4. Use newly created policy to create a role 
+The policy willl be used to give permistions to a role. That will be attached to the lambda function that will be used later in the project.
+Here is the policy: 
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "sns:Publish",
+            "Resource": "arn:aws:sns:REGION:ACCOUNT_ID:stock_topic"
+        }
+    ]
+}
+```
+![image](https://github.com/user-attachments/assets/22be914a-e454-4988-be37-f6ed62b03aec)
+
 ### 5. Create Lambda function
+Create the function. Attach the newly created role. 
+![Screenshot 2025-01-12 164536](https://github.com/user-attachments/assets/bf1db415-47ca-4ce1-84bd-dd1403129bce)
+
+
 ### 6. Create subscription for SNS topic and subscribe to it
+You can subsribe using email and/or SMS
+![Screenshot 2025-01-12 163149](https://github.com/user-attachments/assets/fa33d1e1-fef5-423d-bc2f-f363de3c9ca6)
+![Screenshot 2025-01-12 163157](https://github.com/user-attachments/assets/74ac425b-243e-4e27-8f8c-e8118dd726d9)
+Then you will recieve a message and have to confirm 
+
+![Screenshot 2025-01-12 163426](https://github.com/user-attachments/assets/d346edba-28f4-457e-92d5-ada91ad02d9e)
+
+
 ### 7. Add Code and Environment Varialbes to Lambda fuction 
+Insert code from stock_notifications.py and put it inside the lambda function.
+
+Here is the code:
+```
+import os
+import json
+import urllib.request
+import boto3
+from datetime import datetime, timezone
+
+def format_stock_data(stock, symbol):
+    price = stock.get("05. price", "N/A")
+    change = stock.get("09. change", "N/A")
+    change_percent = stock.get("10. change percent", "N/A")
+    high_52_week = stock.get("03. high", "N/A")
+    low_52_week = stock.get("04. low", "N/A")
+    timestamp = stock.get("07. latest trading day", "Unknown")
+    
+    return (
+        f"Stock Symbol: {symbol}\n"
+        f"Current Price: ${price}\n"
+        f"Change: {change}\n"
+        f"Change Percent: {change_percent}\n"
+        f"52-Week High: ${high_52_week}\n"
+        f"52-Week Low: ${low_52_week}\n"
+        f"Timestamp: {timestamp}\n"
+    )
+
+def lambda_handler(event, context):
+    # Get environment variables
+    api_key = os.getenv("ALPHA_VANTAGE_API_KEY")
+    sns_topic_arn = os.getenv("SNS_TOPIC_ARN")
+    sns_client = boto3.client("sns")
+    
+    # Add the stock symbols you want to monitor
+    stock_symbols = ["AAPL", "GOOGL", "AMZN"]
+    
+    messages = []
+
+    for symbol in stock_symbols:
+        # Fetch data from the API
+        api_url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={api_key}"
+        try:
+            with urllib.request.urlopen(api_url) as response:
+                data = json.loads(response.read().decode())["Global Quote"]
+                print(json.dumps(data, indent=4))  # Debugging: log the raw data
+                messages.append(format_stock_data(data, symbol))
+        except Exception as e:
+            print(f"Error fetching data from API for {symbol}: {e}")
+            return {"statusCode": 500, "body": "Error fetching data"}
+    
+    final_message = "\n---\n".join(messages) if messages else "No stock data available."
+    
+    # Publish to SNS
+    try:
+        sns_client.publish(
+            TopicArn=sns_topic_arn,
+            Message=final_message,
+            Subject="Stock Market Updates"
+        )
+        print("Message published to SNS successfully.")
+    except Exception as e:
+        print(f"Error publishing to SNS: {e}")
+        return {"statusCode": 500, "body": "Error publishing to SNS"}
+    
+    return {"statusCode": 200, "body": "Data processed and sent to SNS"}
+```
 ### 8. Test and Deploy Code 
 ### (Optional) Configure EventBridge Schedule to receive Notifcations at a certain period of time
 
 ## What was learned 
-Create an SNS topic for users to subscribe too
-Setting up SNS to send messaseges 
-Create a Lambda function
-Using code and environment varialbes inside an Lambda fuction 
-Adding policys and roles to Lambda 
-Retirving data from an api and changing it to a readable format
-Tesing before delpoying your code 
+- Create an SNS topic for users to subscribe too
+- Setting up SNS to send messaseges 
+- Create a Lambda function
+- Using code and environment varialbes inside an Lambda fuction 
+- Adding policys and roles to Lambda 
+- Retirving data from an api and changing it to a readable format
+- Tesing before delpoying your code 
 ## Future Improvements
-Have a link users and click to subsribe 
-Have a way to enter what stocks they want to see outside of changing the code inside the fuction 
+- Have a link users and click to subsribe 
+- Have a way to enter what stocks they want to see outside of changing the code inside the fuction 
