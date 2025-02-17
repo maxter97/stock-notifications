@@ -11,7 +11,7 @@ Creating a stock notification system to send real-time data on your favorte stoc
 3. API Key from Alpha Vantage or any stock market API
 4. A Code/Text Editor: To edit any code if needed
 ## Instruction
-### 1. Obtian an API key from Alpha Vantage
+### 1. Obtain an API key from Alpha Vantage
 Sign up at https://www.alphavantage.co/support/#api-key for a free tier key.
 Make sure to save the key for later in the project
 ### 2. Create a AWS SNS Topic
