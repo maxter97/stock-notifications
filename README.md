@@ -1,5 +1,5 @@
 # Stock Notification System 
-Project 2 for DevOp Challenge #DevOpsAllStarsChallenge
+Project 2 for DevOp Challenge #DevOpsAllStarsChallenge Updated version with teraform: https://github.com/maxter97/stock-notifications-terraform
 ## Overview
 Creating a stock notification system to send real-time data on your favorite stocks to users through email and/or text.
 
